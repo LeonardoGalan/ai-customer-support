@@ -6,10 +6,13 @@ export default function Home() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "please provide details about your issue",
+      content:
+        "Hi, I am Leo's Assistant. Please provide details about what I can assist you with today.",
     },
   ]);
+  const [message, setMessage] = useState("");
   const sendMessage = async () => {
+    if (message.trim() === "") return;
     setMessage("");
     setMessages((messages) => [
       ...messages,
@@ -51,7 +54,12 @@ export default function Home() {
     });
   };
 
-  const [message, setMessage] = useState("");
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
 
   return (
     <Box
@@ -104,7 +112,12 @@ export default function Home() {
           <TextField
             label="Message"
             fullWidth
+            value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            multiline
+            minRows={1}
+            maxRows={4}
           />
           <Button variant="contained" onClick={sendMessage}>
             Send
